@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DroHealthTest</string>
+    <string name="bag">Bag</string>
+    <string name="database_name">dro_health_store</string>
 </resources>
