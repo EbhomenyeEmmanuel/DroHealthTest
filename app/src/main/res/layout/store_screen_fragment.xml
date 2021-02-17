@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.esq.drohealthtest.utils.StringUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.esq.drohealthtest.ui.storescreen.StoreScreenViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.storescreen.StoreScreenFragment">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_arrow_back_24"
+            android:tint="@android:color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewNoOfItems"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:gravity="center"
+            android:text="@{StringUtils.INSTANCE.getNumberOfItemsToString(viewModel.numberOfItemsInStore)}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNoOfItems">
+
+            <ImageButton
+                android:id="@+id/imageButtonSort"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:layout_marginBottom="@dimen/dimen_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/circle_bg"
+                android:padding="@dimen/dimen_10dp"
+                android:src="@drawable/ic_sort"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewNoOfItems" />
+
+            <ImageButton
+                android:id="@+id/imageButtonFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_16dp"
+                android:layout_marginBottom="@dimen/dimen_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/circle_bg"
+                android:padding="@dimen/dimen_10dp"
+                android:src="@drawable/ic_filter"
+                app:layout_constraintStart_toEndOf="@id/imageButtonSort"
+                app:layout_constraintTop_toBottomOf="@id/textViewNoOfItems" />
+
+            <ImageButton
+                android:id="@+id/imageButtonSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/circle_bg"
+                android:padding="@dimen/dimen_10dp"
+                android:src="@drawable/ic_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageButtonFilter"
+                app:layout_constraintTop_toBottomOf="@id/textViewNoOfItems" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewStoreList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/bottomSheet"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageButton"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            tools:listitem="@layout/content_item_store_screen" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/rounded_sheet">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView2"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:scaleType="centerCrop"
+                    android:tint="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_remove_24" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView4"
+                    android:layout_width="24dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center|top"
+                    android:scaleType="centerCrop"
+                    android:tint="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.046"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2"
+                    app:srcCompat="@drawable/ic_shopping_bag1" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:text="@string/bag"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView4"
+                    app:layout_constraintStart_toEndOf="@+id/appCompatImageView4"
+                    app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView04"
+                    android:layout_width="24dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center|top"
+                    android:scaleType="centerCrop"
+                    android:tint="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.046"
+                    app:layout_constraintStart_toStartOf="@+id/appCompatImageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2"
+                    app:srcCompat="@drawable/ic_shopping_bag1" />
+
+                <TextView
+                    android:id="@+id/textView05"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_8dp"
+                    android:text="@string/bag"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView4"
+                    app:layout_constraintStart_toEndOf="@+id/appCompatImageView04"
+                    app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
+
+                <TextView
+                    android:id="@+id/textViewAmountOfItemInStore"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/circle_bg"
+                    android:padding="@dimen/dimen_8dp"
+                    android:text="@{viewModel.numberOfItemsInBag}"
+                    android:textColor="@color/dro_purple"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/appCompatImageView4"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:text="3" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
