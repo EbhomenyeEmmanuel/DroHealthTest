@@ -8,6 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.esq.drohealthtest.R
 
 object GlideBindingAdapter {
+    @JvmStatic
     @BindingAdapter("imageUrl")
     fun setImage(view: ImageView, imageUrl: Int) {
         val context: Context = view.context
