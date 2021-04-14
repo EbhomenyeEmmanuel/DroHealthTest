@@ -1,5 +1,7 @@
 package com.esq.drohealthtest.ui.storescreen
 
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.esq.drohealthtest.R
 import com.esq.drohealthtest.data.model.StoreItem
 import com.esq.drohealthtest.databinding.StoreScreenFragmentBinding
 import com.esq.drohealthtest.utils.EventObserver
+import com.esq.drohealthtest.utils.shortToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,6 +55,7 @@ class StoreScreenFragment : Fragment() {
         initAdapter()
         initStoreList()
         //initBottomSheet()
+        setUpSearch()
     }
 
     private fun initBottomSheet() {
@@ -96,6 +100,19 @@ class StoreScreenFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             _viewModel.storeItems.collectLatest {
                 adapter.submitList(it)
+            }
+        }
+    }
+
+    //TODO (" Add search Functionality")
+    private fun setUpSearch() {
+        bind.imageButtonSearch.setOnClickListener {
+            activity?.onSearchRequested()
+        }
+        if (Intent.ACTION_SEARCH == activity?.intent?.action!!){
+            activity?.intent?.getStringExtra(SearchManager.QUERY)?.also { query ->
+                //TODO("Send Query to another UI")
+                context?.shortToast("Query Submitted is $query")
             }
         }
     }
