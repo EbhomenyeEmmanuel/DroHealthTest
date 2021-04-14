@@ -7,8 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#b00020</color>
 
     <color name="grey_color">#909090</color>
+    <color name="light_grey_color">#f0f0f0</color>
     <color name="dark_purple">#7B4397</color>
     <color name="dro_purple">#9F5DE2</color>
     <color name="dro_turquoise">#0CB8B6</color>
