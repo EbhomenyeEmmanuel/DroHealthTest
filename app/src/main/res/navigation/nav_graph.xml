@@ -10,5 +10,19 @@
         android:name="com.esq.drohealthtest.ui.storescreen.StoreScreenFragment"
         android:label="StoreScreenFragment"
         tools:layout="@layout/store_screen_fragment"
-        />
+        >
+        <action
+            android:id="@+id/action_storeScreenFragment_to_viewDrugScreenFragment"
+            app:destination="@id/viewDrugScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewDrugScreenFragment"
+        android:name="com.esq.drohealthtest.ui.viewscreendetails.ViewDrugScreenFragment"
+        android:label="ViewDrugScreenFragment"
+        tools:layout="@layout/fragment_view_drug_screen"
+        >
+        <argument
+            android:name="drugClicked"
+            app:argType="com.esq.drohealthtest.data.model.StoreItem" />
+    </fragment>
 </navigation>
