@@ -163,36 +163,9 @@
                     app:layout_constraintStart_toEndOf="@+id/appCompatImageView4"
                     app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/appCompatImageView04"
-                    android:layout_width="24dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center|top"
-                    android:paddingBottom="@dimen/dimen_10dp"
-                    android:scaleType="centerCrop"
-                    android:tint="@android:color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.046"
-                    app:layout_constraintStart_toStartOf="@+id/appCompatImageView2"
-                    app:layout_constraintTop_toBottomOf="@+id/appCompatImageView2"
-                    app:srcCompat="@drawable/ic_shopping_bag1" />
-
-                <TextView
-                    android:id="@+id/textView05"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:paddingBottom="@dimen/dimen_10dp"
-                    android:text="@string/bag"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView4"
-                    app:layout_constraintStart_toEndOf="@+id/appCompatImageView04"
-                    app:layout_constraintTop_toTopOf="@+id/appCompatImageView4" />
-
                 <TextView
                     android:id="@+id/textViewAmountOfItemInStore"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:background="@drawable/circle_bg"
