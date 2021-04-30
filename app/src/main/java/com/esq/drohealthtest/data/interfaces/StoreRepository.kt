@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StoreRepository {
     fun getHomeListResultStream(): Flow<List<StoreItem>>
+    fun getSearchResultStream(): Flow<List<StoreItem>>
     fun getNumberOfItemsInStore(): LiveData<Int>
     fun getNumberOfItemsInBag(): LiveData<Int>
 }
