@@ -6,6 +6,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Shows a short Toast with a String Parameter.
@@ -35,7 +38,7 @@ fun Context.longToast(@StringRes msg: Int) {
 }
 
 /**
- * Utility method for observing once.
+ * A generic extension utility method for observing once.
  */
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
     observe(lifecycleOwner, object : Observer<T> {
@@ -45,3 +48,15 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
         }
     })
 }
+
+/**
+ * A generic extension utility method for converting a list to a flow.
+ */
+fun <T> List<T>.toFlow(): Flow<List<T>> =
+    flow {
+        while (true) {
+            emit(this@toFlow)
+            delay(1000)
+        }
+    }
+
