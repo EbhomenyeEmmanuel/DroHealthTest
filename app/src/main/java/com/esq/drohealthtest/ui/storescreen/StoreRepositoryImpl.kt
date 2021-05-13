@@ -15,15 +15,19 @@ class StoreRepositoryImpl @Inject constructor(private val storeItemsDao: StoreIt
                                               private val bagItemsDao: BagItemsDao,
                                               private val mapperStoreItem: StoreItemModelMapper): StoreRepository {
 
-    override fun getHomeListResultStream(): Flow<List<StoreItem>> {
+    override suspend fun getHomeListResultStream(): Flow<List<StoreItem>> {
         return storeItemsDao.getAllStoredItems().map { mapperStoreItem.mapFromEntityList(it) }
     }
 
-    override fun getNumberOfItemsInStore(): LiveData<Int> {
+    override suspend fun getSearchResultStream(): Flow<List<StoreItem>> {
+        return getHomeListResultStream()
+    }
+
+    override suspend fun getNumberOfItemsInStore(): LiveData<Int> {
         return storeItemsDao.getNumberOfItemsInStore().asLiveData()
     }
 
-    override fun getNumberOfItemsInBag(): LiveData<Int> {
+    override suspend fun getNumberOfItemsInBag(): LiveData<Int> {
         return bagItemsDao.getNumberOfItemsInBag().asLiveData()
     }
 }

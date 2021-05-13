@@ -5,8 +5,8 @@ import com.esq.drohealthtest.data.model.StoreItem
 import kotlinx.coroutines.flow.Flow
 
 interface StoreRepository {
-    fun getHomeListResultStream(): Flow<List<StoreItem>>
-    fun getSearchResultStream(): Flow<List<StoreItem>>
-    fun getNumberOfItemsInStore(): LiveData<Int>
-    fun getNumberOfItemsInBag(): LiveData<Int>
+    suspend fun getHomeListResultStream(): Flow<List<StoreItem>>
+    suspend fun getSearchResultStream(): Flow<List<StoreItem>>
+    suspend fun getNumberOfItemsInStore(): LiveData<Int>
+    suspend fun getNumberOfItemsInBag(): LiveData<Int>
 }
