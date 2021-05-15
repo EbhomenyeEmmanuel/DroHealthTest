@@ -1,5 +1,6 @@
 package com.esq.drohealthtest.data.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,7 +19,7 @@ interface StoreItemsDao {
     fun getAllStoredItems(): Flow<List<StoreItemDatabaseModel>>
 
     @Query("SELECT COUNT(*) FROM items_in_bag")
-    fun getNumberOfItemsInStore(): Flow<Int>
+    fun getNumberOfItemsInStore(): LiveData<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStoredItem(storeItemDatabaseModel: StoreItemDatabaseModel)
@@ -38,7 +39,7 @@ interface BagItemsDao {
     fun getAllItemsInBag(): Flow<List<BagItemDatabaseModel>>
 
     @Query("SELECT COUNT(*) FROM items_in_bag")
-    fun getNumberOfItemsInBag(): Flow<Int>
+    fun getNumberOfItemsInBag(): LiveData<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveBagItem(bagItemDatabaseModel: BagItemDatabaseModel)
