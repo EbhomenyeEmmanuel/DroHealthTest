@@ -10,8 +10,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.esq.drohealthtest.R
+import com.esq.drohealthtest.data.model.StoreScreenUiState
 import com.esq.drohealthtest.data.model.StoreItem
 import com.esq.drohealthtest.databinding.StoreScreenFragmentBinding
 import com.esq.drohealthtest.utils.EventObserver
@@ -19,7 +21,8 @@ import com.esq.drohealthtest.utils.shortToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -42,20 +45,26 @@ class StoreScreenFragment : Fragment() {
         return bind.root
     }
 
+    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind.viewModel = _viewModel
         bind.lifecycleOwner = this
 
-        _viewModel.navigateToViewArticle.observe(viewLifecycleOwner, EventObserver { article ->
-            //if (findNavController().currentDestination?.id == R.id.storeScreenFragment)
-            //findNavController().navigate(Home.actionHomeFragmentToViewProductFragment(article))
+        //Navigate to DrugScreen
+        _viewModel.navigateToViewDrugScreen.observe(viewLifecycleOwner, EventObserver { article ->
+            if (findNavController().currentDestination?.id == R.id.storeScreenFragment)
+                findNavController().navigate(
+                    StoreScreenFragmentDirections.actionStoreScreenFragmentToViewDrugScreenFragment(
+                        article
+                    )
+                )
         })
 
         initAdapter()
         initStoreList()
         //initBottomSheet()
-        setUpSearch()
+        //setUpSearch()
     }
 
     private fun initBottomSheet() {
@@ -69,14 +78,10 @@ class StoreScreenFragment : Fragment() {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         bind.appCompatImageView4.visibility = View.VISIBLE
                         bind.textView5.visibility = View.VISIBLE
-                        bind.appCompatImageView04.visibility = View.GONE
-                        bind.textView05.visibility = View.GONE
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         bind.appCompatImageView4.visibility = View.GONE
                         bind.textView5.visibility = View.GONE
-                        bind.appCompatImageView04.visibility = View.VISIBLE
-                        bind.textView05.visibility = View.VISIBLE
                     }
                 }
             }
@@ -90,16 +95,31 @@ class StoreScreenFragment : Fragment() {
 
     private fun initAdapter() {
         adapter = StoreScreenRvAdapter(requireContext()) { item: StoreItem ->
-            _viewModel.onViewHomeArticleClicked(item)
+            _viewModel.onViewDrugClicked(item)
         }
         bind.recyclerViewStoreList.layoutManager = GridLayoutManager(activity, 2)
         bind.recyclerViewStoreList.adapter = adapter
     }
 
     private fun initStoreList() {
-        lifecycleScope.launchWhenResumed {
-            _viewModel.storeItems.collectLatest {
-                adapter.submitList(it)
+        lifecycleScope.launchWhenStarted {
+            _viewModel.currentStoreScreenState.collect { state ->
+                when (state) {
+                    is StoreScreenUiState.Loading -> {
+
+                    }
+                    is StoreScreenUiState.Success -> {
+                        state.data.collect {
+                            adapter.submitList(it)
+                        }
+                    }
+                    is StoreScreenUiState.Error -> {
+
+                    }
+                    is StoreScreenUiState.Empty -> {
+
+                    }
+                }
             }
         }
     }
@@ -109,10 +129,13 @@ class StoreScreenFragment : Fragment() {
         bind.imageButtonSearch.setOnClickListener {
             activity?.onSearchRequested()
         }
-        if (Intent.ACTION_SEARCH == activity?.intent?.action!!){
+        if (Intent.ACTION_SEARCH == activity?.intent?.action!!) {
             activity?.intent?.getStringExtra(SearchManager.QUERY)?.also { query ->
                 //TODO("Send Query to another UI")
                 context?.shortToast("Query Submitted is $query")
+                lifecycleScope.launchWhenResumed {
+                    // _viewModel.searchResults(query)
+                }
             }
         }
     }
