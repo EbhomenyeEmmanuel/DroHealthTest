@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface StoreRepository {
     suspend fun getHomeListResultStream(): Flow<List<StoreItem>>
     suspend fun getSearchResultStream(): Flow<List<StoreItem>>
-    suspend fun getNumberOfItemsInStore(): LiveData<Int>
-    suspend fun getNumberOfItemsInBag(): LiveData<Int>
+    fun getNumberOfItemsInStore(): LiveData<Int>
+    fun getNumberOfItemsInBag(): LiveData<Int>
 }
