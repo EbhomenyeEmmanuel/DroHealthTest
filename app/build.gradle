@@ -43,6 +43,12 @@ android {
         viewBinding true
     }
 
+    testOptions{ //Tell gradle to use android resources
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
 }
 
 dependencies {
