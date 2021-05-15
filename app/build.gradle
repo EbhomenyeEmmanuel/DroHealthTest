@@ -75,7 +75,27 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
 
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //Local Unit Tests
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "org.mockito:mockito-core:3.5.9"
+    testImplementation 'org.mockito:mockito-inline:2.13.0' //For testing final classes
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
+
+    //Instrumented Unit Tests
+    androidTestImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.google.truth:truth:$truthVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:2.12.1"
+    androidTestImplementation "org.mockito:mockito-core:3.5.9"
+
+
 }
