@@ -48,21 +48,28 @@ abstract class DroHealthStoreDatabase : RoomDatabase() {
                 INSTANCE?.let { database->
                     scope.launch {
                         val storeDao = database.storeDao()
-                        prePopulateDatabase(storeDao)
+                        val bagItemsDao = database.bagItemsDao()
+                        prePopulateDatabase(storeDao, bagItemsDao)
                     }
                 }
             }
 
             //add items
-            private suspend fun prePopulateDatabase(storeDao: StoreItemsDao){
+            private suspend fun prePopulateDatabase(storeDao: StoreItemsDao, bagItemsDao: BagItemsDao){
                 val x =  listOf(
                     StoreItemDatabaseModel(id = 0, medicineIcon = R.drawable.ic_launcher_background, mainName = "Kezitil Sus", otherName = "Cefuroxime Axetil", medicineTypeName = "Oral Suspension - 125mg", medicinePrice = 1820)
                     , StoreItemDatabaseModel(id = 1,medicineIcon = R.drawable.ic_launcher_background, mainName = "Kezitil", otherName = "Cefuroxime Axetil", medicineTypeName = "Tablet - 250mg", medicinePrice = 1140
                     ), StoreItemDatabaseModel(id = 2,medicineIcon = R.drawable.ic_launcher_background, mainName = "Garlic Oil", otherName = "Garlic Oil", medicineTypeName = "Soft Gel - 650mg", medicinePrice = 385
                     ), StoreItemDatabaseModel(id = 3,medicineIcon = R.drawable.ic_launcher_background, mainName = "Folic Acid (100)", otherName = "Folic Acid", medicineTypeName = "Tablet - 5mg", medicinePrice = 170)
                     ,StoreItemDatabaseModel(id = 4,medicineIcon = R.drawable.ic_launcher_background, mainName = "Folic Acid (150)", otherName = "Folic Acid", medicineTypeName = "Tablet - 5mg", medicinePrice = 150
-                    ))
+                    ), StoreItemDatabaseModel(id = 5,medicineIcon = R.drawable.ic_launcher_background, mainName = "Garlic Oil", otherName = "Garlic Oil", medicineTypeName = "Soft Gel - 650mg", medicinePrice = 385
+                ), StoreItemDatabaseModel(id = 6,medicineIcon = R.drawable.ic_launcher_background, mainName = "Folic Acid (100)", otherName = "Folic Acid", medicineTypeName = "Tablet - 5mg", medicinePrice = 170)
+                )
                 storeDao.insertAllStoredItems(x)
+                //One bag added to db
+                bagItemsDao.saveBagItem(
+                    BagItemDatabaseModel(id = 1,drugIcon = R.drawable.ic_launcher_background, drugName = "Folic Acid (100)", drugType = "Tablet - 5mg", drugPrice = "170", drugQuantity = 1)
+                )
             }
         }
     }
