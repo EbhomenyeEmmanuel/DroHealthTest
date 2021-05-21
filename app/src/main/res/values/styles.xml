@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DroHealthTest.BottomSheetView" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <!--  <item name="android:fontFamily">@font/dank_mono_regular</item> -->
+    </style>
+
+    <!--  For Purple BottomSheet -->
+    <style name="PurpleBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="android:background"> @color/dro_purple</item>
+    </style>
+
+    <!--  For Circle Image View -->
+    <style name="Widget.App.CircleImageView" parent="">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.CircleImageView</item>
+    </style>
+    <style name="ShapeAppearance.App.CircleImageView" parent="">
+        <item name="cornerFamily"> rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>
