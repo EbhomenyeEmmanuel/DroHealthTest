@@ -66,10 +66,10 @@ class BagItemsDaoTest {
         )
 
         dao.saveBagItem(bagItem)
-        val allBagItems = dao.getAllItemsInBag().asLiveData().getOrAwaitValue()
+        val allBagItems = dao.getAllItemsInBag().getOrAwaitValue()
         assertThat(bagItem).isIn(allBagItems)
 
-        val noOfBagItems = dao.getNumberOfItemsInBag().asLiveData().getOrAwaitValue()
+        val noOfBagItems = dao.getNumberOfItemsInBag().getOrAwaitValue()
         assertThat(noOfBagItems).isEqualTo(1)
     }
 
@@ -86,8 +86,24 @@ class BagItemsDaoTest {
 
         dao.saveBagItem(bagItem2)
         dao.deleteAll()
-        val noOfBagItems = dao.getNumberOfItemsInBag().asLiveData().getOrAwaitValue()
+        val noOfBagItems = dao.getNumberOfItemsInBag().getOrAwaitValue()
         assertThat(noOfBagItems).isEqualTo(0)
+    }
+
+    @Test
+    fun testGetNoOfBagItems() = runBlockingTest {
+        val bagItem2 = BagItemDatabaseModel(
+            id = 2,
+            drugIcon = R.drawable.ic_launcher_background,
+            drugName = "Folic Acid (100)",
+            drugType = "Tablet - 5mg",
+            drugPrice = "170",
+            drugQuantity = 1
+        )
+
+        dao.saveBagItem(bagItem2)
+        val noOfBagItems = dao.getNumberOfItemsInBag().getOrAwaitValue()
+        assertThat(noOfBagItems).isEqualTo(1)
     }
 
 }
