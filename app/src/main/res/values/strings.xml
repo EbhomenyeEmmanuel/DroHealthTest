@@ -2,4 +2,10 @@
     <string name="app_name">DroHealthTest</string>
     <string name="bag">Bag</string>
     <string name="database_name">dro_health_store</string>
+    <string name="search_hint">Search</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_to_bag">Add to bag</string>
+    <string name="pack_s">Pack(s)</string>
+    <string name="drug_icon">Drug Icon</string>
+    <string name="back_button">Back button</string>
 </resources>
