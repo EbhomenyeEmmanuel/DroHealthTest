@@ -1,7 +1,6 @@
 package com.esq.drohealthtest.ui.storescreen
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import com.esq.drohealthtest.data.database.BagItemsDao
 import com.esq.drohealthtest.data.database.StoreItemsDao
 import com.esq.drohealthtest.data.interfaces.StoreRepository
@@ -23,11 +22,11 @@ class StoreRepositoryImpl @Inject constructor(private val storeItemsDao: StoreIt
         return getHomeListResultStream()
     }
 
-    override suspend fun getNumberOfItemsInStore(): LiveData<Int> {
-        return storeItemsDao.getNumberOfItemsInStore().asLiveData()
+    override fun getNumberOfItemsInStore(): LiveData<Int> {
+        return storeItemsDao.getNumberOfItemsInStore()
     }
 
-    override suspend fun getNumberOfItemsInBag(): LiveData<Int> {
-        return bagItemsDao.getNumberOfItemsInBag().asLiveData()
+    override fun getNumberOfItemsInBag(): LiveData<Int> {
+        return bagItemsDao.getNumberOfItemsInBag()
     }
 }
