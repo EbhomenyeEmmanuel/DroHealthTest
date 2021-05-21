@@ -6,9 +6,12 @@ import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
 import com.esq.drohealthtest.data.model.StoreItem
 import com.esq.drohealthtest.utils.Constants
+import com.esq.drohealthtest.utils.switchMapThenComputeIntValueType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,12 +20,15 @@ class ViewDrugScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            displayInitialData()
+        viewModelScope.launch {
+            delay(100)
+            withContext(Dispatchers.Main){
+                displayInitialData()
+            }
         }
     }
     val TAG = this::class.java.simpleName
-    private val _numberOfItemsInBag = MutableLiveData<Int>()
+    private val _numberOfItemsInBag = MediatorLiveData<Int>()
     val numberOfItemsInBag: LiveData<Int>
         get() = _numberOfItemsInBag
 
@@ -31,42 +37,51 @@ class ViewDrugScreenViewModel @Inject constructor(
     val noOfPacksChosen: LiveData<Int>
         get() = _noOfPacksChosen
 
-    private val _totalPriceForDrug = MutableLiveData<Int>()
-    val totalPriceForDrug: LiveData<Int> = noOfPacksChosen.map {
-        currentDrugShown.medicinePrice * it
-    }
+    private val _totalPriceForDrug = MediatorLiveData<Int>()
+    val totalPriceForDrug: LiveData<Int> get() = _totalPriceForDrug
 
-    private suspend fun displayInitialData() {
-        Log.d(
-            TAG,
-            "_numberOfItemsInBag is $_numberOfItemsInBag and bags in repository is ${repository.getNumberOfItemsInBag()} /n no of bags is ${repository.getNumberOfItemsInBag().value} "
-        )
-       _numberOfItemsInBag.postValue(repository.getNumberOfItemsInBag().value ?: 0)
+    private fun displayInitialData() {
+        _numberOfItemsInBag.addSource(repository.getNumberOfItemsInBag()) {
+            _numberOfItemsInBag.value = it
+        }
         _noOfPacksChosen.postValue(Constants.INITIAL_NUMBER_OF_PACK_CHOSEN)
-        /*
-        totalPriceForDrug = noOfPacksChosen.map {
-            currentDrugShown.medicinePrice * it
-        }*/
-    }
 
-    fun onRemovePackClicked(view: View) {
-        //Total price fo drug should change when no of packs change i.e value of LiveData - noOfPacksChosen
-        Transformations.map(_noOfPacksChosen) {
-            if (it == 1) {
-                //return@map
-            } else {
-                //it -= 1
+        //Total price for drug should change when no of packs change i.e value of LiveData changes
+        _totalPriceForDrug.switchMapThenComputeIntValueType(_noOfPacksChosen) {
+            if (it != null) {
+                currentDrugShown.medicinePrice * it
+            }else{
+                0
             }
         }
     }
 
-    fun onAddPackClicked(view: View) {
-        //_noOfPacksChosen =
-        Transformations.map(_noOfPacksChosen) { it ->
-            if (it == 1) {
-                //return
+    /**
+     * Decrements value of packs chosen
+     */
+    fun onRemovePackClicked(view: View) {
+        Log.d(TAG, "onRemovePackClicked: ")
+        _noOfPacksChosen.map {
+            Log.d(TAG, "onRemovePackClicked: Inside the map function")
+            if (it == 0) {
+                _noOfPacksChosen.value = it
             } else {
-                //it -= 1
+                _noOfPacksChosen.value = it.dec()
+            }
+        }
+    }
+
+    /**
+     * Increments value of packs chosen
+     */
+    fun onAddPackClicked(view: View) {
+        Log.d(TAG, "onAddPackClicked: ")
+        _noOfPacksChosen.map {
+            Log.d(TAG, "onAddPackClicked: Inside the map function")
+            if (it == 1) {
+                _noOfPacksChosen.value = it
+            } else {
+                _noOfPacksChosen.value = it.inc()
             }
         }
     }
