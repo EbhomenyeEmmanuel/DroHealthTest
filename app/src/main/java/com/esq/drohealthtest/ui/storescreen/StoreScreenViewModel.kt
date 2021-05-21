@@ -1,9 +1,6 @@
 package com.esq.drohealthtest.ui.storescreen
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
 import com.esq.drohealthtest.data.model.StoreItem
 import com.esq.drohealthtest.data.model.StoreScreenUiState
@@ -16,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class StoreScreenViewModel @Inject constructor(
@@ -29,12 +27,15 @@ class StoreScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            displayInitialData()
+            delay(100)
+            withContext(Dispatchers.Main){
+                displayInitialData()
+            }
             getStoreItems()
         }
     }
 
-    private val _numberOfItemsInStore = MutableLiveData<Int>()
+    private val _numberOfItemsInStore = MediatorLiveData<Int>()
     val numberOfItemsInStore: LiveData<Int>
         get() = _numberOfItemsInStore
 
@@ -44,13 +45,15 @@ class StoreScreenViewModel @Inject constructor(
         get() = _navigateToViewDrugScreen
 
     private fun displayInitialData() {
-        //_numberOfItemsInStore.value = repository.getNumberOfItemsInStore().value
+        _numberOfItemsInStore.addSource(repository.getNumberOfItemsInStore()) {
+            _numberOfItemsInStore.value = it
+        }
     }
 
     private suspend fun getStoreItems() {
         withContext(Dispatchers.IO){
             _currentStoreScreenState.value = StoreScreenUiState.Loading
-            delay(1L)
+            delay(50)
             _currentStoreScreenState.value =
                 StoreScreenUiState.Success(repository.getHomeListResultStream())
         }
