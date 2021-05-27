@@ -8,4 +8,12 @@
     <string name="pack_s">Pack(s)</string>
     <string name="drug_icon">Drug Icon</string>
     <string name="back_button">Back button</string>
+    <string name="product_details">Product details</string>
+    <string name="pack_size">pack size</string>
+    <string name="drug_pack_info">%d pack of %s contains 3 unit(s) of 10 Tablet(s)</string>
+    <string name="product_id">product id</string>
+    <string name="constituents">constituents</string>
+    <string name="dispensed_in">dispensed in</string>
+    <string name="packs">Packs</string>
+
 </resources>
