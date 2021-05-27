@@ -53,7 +53,6 @@ class StoreScreenViewModel @Inject constructor(
     private suspend fun getStoreItems() {
         withContext(Dispatchers.IO){
             _currentStoreScreenState.value = StoreScreenUiState.Loading
-            delay(50)
             _currentStoreScreenState.value =
                 StoreScreenUiState.Success(repository.getHomeListResultStream())
         }
