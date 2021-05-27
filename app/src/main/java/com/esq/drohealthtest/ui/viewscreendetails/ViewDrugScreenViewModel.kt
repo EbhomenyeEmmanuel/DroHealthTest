@@ -21,12 +21,13 @@ class ViewDrugScreenViewModel @Inject constructor(
 ) : ViewModel() {
     init {
         viewModelScope.launch {
-            delay(100)
-            withContext(Dispatchers.Main){
+            delay(50)
+            withContext(Dispatchers.Main) {
                 displayInitialData()
             }
         }
     }
+
     val TAG = this::class.java.simpleName
     private val _numberOfItemsInBag = MediatorLiveData<Int>()
     val numberOfItemsInBag: LiveData<Int>
@@ -41,6 +42,8 @@ class ViewDrugScreenViewModel @Inject constructor(
     val totalPriceForDrug: LiveData<Int> get() = _totalPriceForDrug
 
     private fun displayInitialData() {
+
+        //Get value of LiveData from repo and use straightaway
         _numberOfItemsInBag.addSource(repository.getNumberOfItemsInBag()) {
             _numberOfItemsInBag.value = it
         }
@@ -50,7 +53,7 @@ class ViewDrugScreenViewModel @Inject constructor(
         _totalPriceForDrug.switchMapThenComputeIntValueType(_noOfPacksChosen) {
             if (it != null) {
                 currentDrugShown.medicinePrice * it
-            }else{
+            } else {
                 0
             }
         }
@@ -61,13 +64,10 @@ class ViewDrugScreenViewModel @Inject constructor(
      */
     fun onRemovePackClicked(view: View) {
         Log.d(TAG, "onRemovePackClicked: ")
-        _noOfPacksChosen.map {
-            Log.d(TAG, "onRemovePackClicked: Inside the map function")
-            if (it == 0) {
-                _noOfPacksChosen.value = it
-            } else {
-                _noOfPacksChosen.value = it.dec()
-            }
+        if (_noOfPacksChosen.value == Constants.INITIAL_NUMBER_OF_PACK_CHOSEN) {
+            return
+        } else {
+            _noOfPacksChosen.value = _noOfPacksChosen.value?.dec()
         }
     }
 
@@ -76,13 +76,7 @@ class ViewDrugScreenViewModel @Inject constructor(
      */
     fun onAddPackClicked(view: View) {
         Log.d(TAG, "onAddPackClicked: ")
-        _noOfPacksChosen.map {
-            Log.d(TAG, "onAddPackClicked: Inside the map function")
-            if (it == 1) {
-                _noOfPacksChosen.value = it
-            } else {
-                _noOfPacksChosen.value = it.inc()
-            }
-        }
+        //TODO("Set maximum amount of pack")
+        _noOfPacksChosen.value = _noOfPacksChosen.value?.inc()
     }
 }
