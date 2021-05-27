@@ -24,6 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class StoreScreenFragment : Fragment() {
@@ -45,7 +46,6 @@ class StoreScreenFragment : Fragment() {
         return bind.root
     }
 
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind.viewModel = _viewModel
