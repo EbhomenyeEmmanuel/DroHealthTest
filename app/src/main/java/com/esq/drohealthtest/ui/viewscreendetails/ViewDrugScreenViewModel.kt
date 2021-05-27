@@ -4,12 +4,17 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
+import com.esq.drohealthtest.data.model.BagItem
 import com.esq.drohealthtest.data.model.StoreItem
+import com.esq.drohealthtest.data.model.StoreScreenUiState
+import com.esq.drohealthtest.data.model.ViewDrugScreenUiState
 import com.esq.drohealthtest.utils.Constants
 import com.esq.drohealthtest.utils.switchMapThenComputeIntValueType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -27,6 +32,10 @@ class ViewDrugScreenViewModel @Inject constructor(
             }
         }
     }
+
+    private val _currentViewDrugScreenState =
+        MutableStateFlow<ViewDrugScreenUiState>(ViewDrugScreenUiState.Empty)
+    val currentViewDrugScreenState: StateFlow<ViewDrugScreenUiState> = _currentViewDrugScreenState
 
     val TAG = this::class.java.simpleName
     private val _numberOfItemsInBag = MediatorLiveData<Int>()
@@ -79,4 +88,33 @@ class ViewDrugScreenViewModel @Inject constructor(
         //TODO("Set maximum amount of pack")
         _noOfPacksChosen.value = _noOfPacksChosen.value?.inc()
     }
+
+    fun onAddToBagClicked(view: View) {
+        Log.d(TAG, "onAddToBagClicked: ")
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Log.d(TAG, "onAddToBagClicked: Trying...")
+                with(currentDrugShown) {
+                    repository.saveItemToBag(
+                        BagItem(
+                            id = id,
+                            drugIcon = medicineIcon,
+                            drugName = mainName,
+                            drugType = medicineTypeName,
+                            drugPrice = totalPriceForDrug.value.toString(),
+                            drugQuantity = noOfPacksChosen.value!!
+                        )
+                    )
+                }
+                ViewDrugScreenUiState.Success(
+                    successMessageHeader = "Successful",
+                    "${currentDrugShown.mainName} has been added to your bag"
+                )
+            } catch (e: Exception) {
+                Log.d(TAG, "onAddToBagClicked: Error...")
+                ViewDrugScreenUiState.Error(errorMessageHeader = "Error", e.message.toString())
+            }
+        }
+    }
+
 }

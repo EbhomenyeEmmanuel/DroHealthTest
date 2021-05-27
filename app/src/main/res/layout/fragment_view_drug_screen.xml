@@ -245,6 +245,7 @@
             android:text="@string/add_to_bag"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             app:icon="@drawable/ic_shopping_bag2"
+            android:onClick="@{viewModel::onAddToBagClicked}"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/dimen_10dp"
             app:layout_constraintBottom_toBottomOf="parent"
