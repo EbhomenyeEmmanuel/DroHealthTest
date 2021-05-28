@@ -64,17 +64,4 @@ fun <T> List<T>.toFlow(): Flow<List<T>> =
         }
     }
 
-/**
- * An extension utility method that works like switch map of the Transformations class but returns an int.
- */
-@MainThread
-fun <X> MediatorLiveData<Int>.switchMapThenComputeIntValueType(
-    source: LiveData<X>,
-    switchMapFunction: Function<X?, Int>
-): LiveData<Int?> {
-    val result = this
-    result.addSource(source
-    ) { x -> result.value = switchMapFunction.apply(x) }
-    return result
-}
 
