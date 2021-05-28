@@ -6,10 +6,8 @@ import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
 import com.esq.drohealthtest.data.model.BagItem
 import com.esq.drohealthtest.data.model.StoreItem
-import com.esq.drohealthtest.data.model.StoreScreenUiState
 import com.esq.drohealthtest.data.model.ViewDrugScreenUiState
 import com.esq.drohealthtest.utils.Constants
-import com.esq.drohealthtest.utils.switchMapThenComputeIntValueType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -47,8 +45,15 @@ class ViewDrugScreenViewModel @Inject constructor(
     val noOfPacksChosen: LiveData<Int>
         get() = _noOfPacksChosen
 
-    private val _totalPriceForDrug = MediatorLiveData<Int>()
-    val totalPriceForDrug: LiveData<Int> get() = _totalPriceForDrug
+    val totalPriceForDrug: LiveData<Int>
+        get() = Transformations.map(_noOfPacksChosen) {
+            if (it != null) {
+                //Total price for drug should change when no of packs change i.e value of LiveData changes
+                currentDrugShown.medicinePrice * it
+            } else {
+                0
+            }
+        }
 
     private fun displayInitialData() {
 
@@ -58,14 +63,6 @@ class ViewDrugScreenViewModel @Inject constructor(
         }
         _noOfPacksChosen.postValue(Constants.INITIAL_NUMBER_OF_PACK_CHOSEN)
 
-        //Total price for drug should change when no of packs change i.e value of LiveData changes
-        _totalPriceForDrug.switchMapThenComputeIntValueType(_noOfPacksChosen) {
-            if (it != null) {
-                currentDrugShown.medicinePrice * it
-            } else {
-                0
-            }
-        }
     }
 
     /**
