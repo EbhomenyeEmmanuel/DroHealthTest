@@ -24,5 +24,25 @@
         <argument
             android:name="drugClicked"
             app:argType="com.esq.drohealthtest.data.model.StoreItem" />
+        <action
+            android:id="@+id/action_viewDrugScreenFragment_to_popupInfoDialogFragment"
+            app:destination="@id/popupInfoDialogFragment" />
+        <action
+            android:id="@+id/action_viewDrugScreenFragment_to_storeScreenFragment"
+            app:destination="@id/storeScreenFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/popupInfoDialogFragment"
+        android:name="com.esq.drohealthtest.ui.viewscreendetails.PopupInfoDialogFragment"
+        android:label="fragment_popup_info_dialog"
+        tools:layout="@layout/fragment_popup_info_dialog" >
+
+        <action
+            android:id="@+id/action_popupInfoDialogFragment_to_storeScreenFragment"
+            app:destination="@id/storeScreenFragment"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="messageForDialog"
+            app:argType="com.esq.drohealthtest.data.model.DialogMessageData" />
+    </dialog>
 </navigation>
