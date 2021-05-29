@@ -5,9 +5,11 @@ import android.view.View
 import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
 import com.esq.drohealthtest.data.model.BagItem
+import com.esq.drohealthtest.data.model.DialogMessageData
 import com.esq.drohealthtest.data.model.StoreItem
 import com.esq.drohealthtest.data.model.ViewDrugScreenUiState
 import com.esq.drohealthtest.utils.Constants
+import com.esq.drohealthtest.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -55,6 +57,16 @@ class ViewDrugScreenViewModel @Inject constructor(
             }
         }
 
+    private val _navigateToPopUpDialog = MutableLiveData<Event<DialogMessageData>>()
+
+    val navigateToPopUpDialog: LiveData<Event<DialogMessageData>>
+        get() = _navigateToPopUpDialog
+
+    //Navigate to Popup Dialog when clicked
+    fun onNavigateToPopUpDialog(dialogMessageData: DialogMessageData) {
+        _navigateToPopUpDialog.value = Event(dialogMessageData)
+    }
+
     private fun displayInitialData() {
 
         //Get value of LiveData from repo and use straightaway
@@ -87,29 +99,37 @@ class ViewDrugScreenViewModel @Inject constructor(
     }
 
     fun onAddToBagClicked(view: View) {
-        Log.d(TAG, "onAddToBagClicked: ")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 Log.d(TAG, "onAddToBagClicked: Trying...")
                 with(currentDrugShown) {
+                    val bag = BagItem(
+                        id = id,
+                        drugIcon = medicineIcon,
+                        drugName = mainName,
+                        drugType = medicineTypeName,
+                        drugPrice = medicinePrice.toString(),
+                        drugQuantity = noOfPacksChosen.value!!
+                    )
                     repository.saveItemToBag(
-                        BagItem(
-                            id = id,
-                            drugIcon = medicineIcon,
-                            drugName = mainName,
-                            drugType = medicineTypeName,
-                            drugPrice = totalPriceForDrug.value.toString(),
-                            drugQuantity = noOfPacksChosen.value!!
+                        bag
+                    )
+                    _currentViewDrugScreenState.value = ViewDrugScreenUiState.Success(
+                        DialogMessageData(
+                            "Successful",
+                            "${currentDrugShown.mainName} has been added to your bag", bag
                         )
                     )
                 }
-                ViewDrugScreenUiState.Success(
-                    successMessageHeader = "Successful",
-                    "${currentDrugShown.mainName} has been added to your bag"
-                )
             } catch (e: Exception) {
                 Log.d(TAG, "onAddToBagClicked: Error...")
-                ViewDrugScreenUiState.Error(errorMessageHeader = "Error", e.message.toString())
+                _currentViewDrugScreenState.value = ViewDrugScreenUiState.Error(
+                    DialogMessageData(
+                        "Error",
+                        e.message.toString(),
+                        null
+                    )
+                )
             }
         }
     }

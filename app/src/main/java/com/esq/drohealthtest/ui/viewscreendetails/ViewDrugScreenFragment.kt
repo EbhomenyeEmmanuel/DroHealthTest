@@ -1,21 +1,19 @@
 package com.esq.drohealthtest.ui.viewscreendetails
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.esq.drohealthtest.R
-import com.esq.drohealthtest.data.model.StoreScreenUiState
 import com.esq.drohealthtest.data.model.ViewDrugScreenUiState
 import com.esq.drohealthtest.databinding.FragmentViewDrugScreenBinding
-import com.esq.drohealthtest.utils.longToast
-import com.esq.drohealthtest.utils.shortToast
+import com.esq.drohealthtest.utils.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -50,7 +48,15 @@ class ViewDrugScreenFragment : Fragment() {
         bind.lifecycleOwner = this
 
         initUiState()
+        //Navigate to DrugScreen
+        _viewModel.navigateToPopUpDialog.observe(viewLifecycleOwner, EventObserver { message ->
+            if (findNavController().currentDestination?.id == R.id.viewDrugScreenFragment)
+                findNavController().navigate(ViewDrugScreenFragmentDirections.actionViewDrugScreenFragmentToPopupInfoDialogFragment(message))
+        })
 
+        bind.imageButtonBack.setOnClickListener {
+            findNavController().navigate(ViewDrugScreenFragmentDirections.actionViewDrugScreenFragmentToStoreScreenFragment())
+        }
     }
 
     private fun initUiState() {
@@ -58,12 +64,10 @@ class ViewDrugScreenFragment : Fragment() {
             _viewModel.currentViewDrugScreenState.collect { state ->
                 when (state) {
                     is ViewDrugScreenUiState.Success -> {
-                        //TODO("Add an success dialog")
-                        activity?.longToast("Success")
+                        _viewModel.onNavigateToPopUpDialog(state.dialogMessageData)
                     }
                     is ViewDrugScreenUiState.Error -> {
-                        //TODO("Add an error dialog")
-                        activity?.longToast("Error")
+                        _viewModel.onNavigateToPopUpDialog(state.dialogMessageData)
                     }
                     is ViewDrugScreenUiState.Empty -> {
 
@@ -75,6 +79,5 @@ class ViewDrugScreenFragment : Fragment() {
 
     companion object {
         fun newInstance() = ViewDrugScreenFragment()
-
     }
 }
