@@ -1,16 +1,16 @@
 package com.esq.drohealthtest.utils
 
 import android.content.Context
+import android.widget.SearchView
 import android.widget.Toast
-import androidx.annotation.MainThread
 import androidx.annotation.StringRes
-import androidx.arch.core.util.Function
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 
 /**
@@ -64,4 +64,19 @@ fun <T> List<T>.toFlow(): Flow<List<T>> =
         }
     }
 
-
+/**
+ * An extension function that observes changes in text and returns a StateFlow.
+ */
+fun SearchView.getQueryTextChangeStateFlow(): StateFlow<String> {
+    val query = MutableStateFlow("")
+    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+        override fun onQueryTextChange(newText: String): Boolean {
+            query.value = newText
+            return true
+        }
+    })
+    return query
+}
