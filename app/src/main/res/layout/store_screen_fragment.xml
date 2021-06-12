@@ -98,6 +98,22 @@
                 app:layout_constraintTop_toBottomOf="@id/textViewNoOfItems" />
         </LinearLayout>
 
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_8dp"
+            android:paddingStart="@dimen/dimen_1dp"
+            android:paddingEnd="@dimen/dimen_1dp"
+            android:inputType="text"
+            android:background="@drawable/search_background"
+            android:visibility="gone"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search_hint"
+            app:layout_constraintStart_toStartOf="@+id/imageButton"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" >
+        </SearchView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewStoreList"
             android:layout_width="match_parent"
@@ -107,7 +123,7 @@
             app:layout_constraintBottom_toTopOf="@id/bottomSheet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/imageButton"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/searchView"
             tools:listitem="@layout/content_item_store_screen" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
