@@ -18,6 +18,9 @@ interface StoreItemsDao {
     @Query("SELECT * FROM stored_item")
     fun getAllStoredItems(): Flow<List<StoreItemDatabaseModel>>
 
+    @Query("SELECT * FROM stored_item WHERE mainName LIKE :search OR medicineTypeName LIKE :search OR otherName LIKE :search")
+    fun findItemWithName(search: String): Flow<List<StoreItemDatabaseModel>>
+
     @Query("SELECT COUNT(*) FROM items_in_bag")
     fun getNumberOfItemsInStore(): LiveData<Int>
 

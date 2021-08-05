@@ -1,11 +1,10 @@
 package com.esq.drohealthtest.ui.storescreen
 
-import android.app.SearchManager
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,17 +12,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.esq.drohealthtest.R
-import com.esq.drohealthtest.data.model.StoreScreenUiState
 import com.esq.drohealthtest.data.model.StoreItem
+import com.esq.drohealthtest.data.model.StoreScreenUiState
 import com.esq.drohealthtest.databinding.StoreScreenFragmentBinding
 import com.esq.drohealthtest.utils.EventObserver
+import com.esq.drohealthtest.utils.getQueryTextChangeStateFlow
 import com.esq.drohealthtest.utils.shortToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 
+@FlowPreview
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -64,7 +66,7 @@ class StoreScreenFragment : Fragment() {
         initAdapter()
         initStoreList()
         //initBottomSheet()
-        //setUpSearch()
+        setUpSearch()
     }
 
     private fun initBottomSheet() {
@@ -124,19 +126,18 @@ class StoreScreenFragment : Fragment() {
         }
     }
 
-    //TODO (" Add search Functionality")
     private fun setUpSearch() {
         bind.imageButtonSearch.setOnClickListener {
-            activity?.onSearchRequested()
-        }
-        if (Intent.ACTION_SEARCH == activity?.intent?.action!!) {
-            activity?.intent?.getStringExtra(SearchManager.QUERY)?.also { query ->
-                //TODO("Send Query to another UI")
-                context?.shortToast("Query Submitted is $query")
-                lifecycleScope.launchWhenResumed {
-                    // _viewModel.searchResults(query)
-                }
+            if (bind.searchView.visibility == View.VISIBLE) {
+                bind.searchView.visibility = View.GONE
+            } else {
+                bind.searchView.visibility = View.VISIBLE
             }
         }
+
+        //Breaks Mvvm
+        //TODO("Breaks Mvvm")
+        _viewModel.searchResults(bind.searchView.getQueryTextChangeStateFlow())
     }
+
 }

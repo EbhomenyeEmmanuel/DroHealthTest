@@ -1,5 +1,6 @@
 package com.esq.drohealthtest.ui.storescreen
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.esq.drohealthtest.data.interfaces.StoreRepository
 import com.esq.drohealthtest.data.model.StoreItem
@@ -8,11 +9,10 @@ import com.esq.drohealthtest.utils.Event
 import com.esq.drohealthtest.utils.toFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@FlowPreview
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @HiltViewModel
@@ -64,19 +64,45 @@ class StoreScreenViewModel @Inject constructor(
     }
 
     //Search from db
-    fun searchResults(queryValue: String) {
+    fun searchResults(stateFlow: StateFlow<String>) {
+        //TODO("Fix empty query from db when results has been search ")
         viewModelScope.launch {
-            repository.getSearchResultStream().map {
-                var searchResultList = mutableListOf<StoreItem>()
-                for (item in it) {
-                    if (item.mainName == queryValue || item.medicineTypeName == queryValue || item.otherName == queryValue) {
-                        searchResultList.add(item)
+           stateFlow.debounce(300)
+                .filter { query ->
+                    return@filter !query.isEmpty()
+                }.distinctUntilChanged()
+                .flatMapLatest { query ->
+                    repository.getSearchResultStream(query).map {
+                        //searchDatabaseForQuery(it, query)
+                        Log.d(TAG, "List from db is $it")
+                        it
+                    }.catch {
                         _currentStoreScreenState.value =
-                            StoreScreenUiState.Success(searchResultList.toFlow())
+                            StoreScreenUiState.Error("")
                     }
+                }.flowOn(Dispatchers.Default)
+                .collect {
+                    Log.d(TAG, "List collected is $it")
+                    _currentStoreScreenState.value =
+                        StoreScreenUiState.Success(it.toFlow())
                 }
+        }
+    }
+
+    private fun searchDatabaseForQuery(
+        list: List<StoreItem>,
+        query: String
+    ): List<StoreItem> {
+        val searchResultList = mutableListOf<StoreItem>()
+        list.forEach { item ->
+            if (item.mainName == query || item.medicineTypeName == query || item.otherName == query) {
+                Log.d(TAG, "$item found")
+                searchResultList.add(item)
+            }else{
+                Log.d(TAG, "$item not found")
             }
         }
+        return searchResultList.toList()
     }
 
 }
