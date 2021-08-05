@@ -15,5 +15,8 @@
     <string name="constituents">constituents</string>
     <string name="dispensed_in">dispensed in</string>
     <string name="packs">Packs</string>
+    <string name="try_again">Try Again</string>
+    <string name="done">Done</string>
+    <string name="view_bag">View Bag</string>
 
 </resources>

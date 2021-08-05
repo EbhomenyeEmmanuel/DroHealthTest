@@ -6,4 +6,5 @@
     <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
     <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_20dp">20dp</dimen>
 </resources>
