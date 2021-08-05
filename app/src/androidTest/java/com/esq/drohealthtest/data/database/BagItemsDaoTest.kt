@@ -66,7 +66,7 @@ class BagItemsDaoTest {
         )
 
         dao.saveBagItem(bagItem)
-        val allBagItems = dao.getAllItemsInBag().getOrAwaitValue()
+        val allBagItems = dao.getAllItemsInBag().asLiveData().getOrAwaitValue()
         assertThat(bagItem).isIn(allBagItems)
 
         val noOfBagItems = dao.getNumberOfItemsInBag().getOrAwaitValue()
